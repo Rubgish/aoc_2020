@@ -5,6 +5,9 @@
 #include <iterator>
 #include <utility>
 #include <string>
+#include <unordered_map>
+#include <sstream>
+#include <list>
 
 class line {
     std::string data;
