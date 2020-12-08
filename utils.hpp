@@ -5,6 +5,7 @@
 #include <iterator>
 #include <utility>
 #include <string>
+#include <map>
 #include <unordered_map>
 #include <sstream>
 #include <list>
