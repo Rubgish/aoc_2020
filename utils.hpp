@@ -9,6 +9,7 @@
 #include <unordered_map>
 #include <sstream>
 #include <list>
+#include <deque>
 
 class line
 {
