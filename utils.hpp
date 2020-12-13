@@ -10,6 +10,7 @@
 #include <sstream>
 #include <list>
 #include <deque>
+#include "cstring"
 
 class line
 {
