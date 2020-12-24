@@ -1,21 +1,13 @@
 #include "utils.hpp"
 
-int check(const std::pair<int, int> &x, std::map<std::pair<int, int>, bool> &tiles, std::map<std::pair<int, int>, bool> &new_tiles)
+int check(const std::pair<int, int> &x, std::map<std::pair<int, int>, bool> &tiles, std::map<std::pair<int, int>, bool> &new_tiles, std::vector<std::pair<int, int>> &perms)
 {
-    std::vector<std::pair<int, int>> perms = {};
-    perms.push_back(std::make_pair(2, 0));
-    perms.push_back(std::make_pair(1, -1));
-    perms.push_back(std::make_pair(-1, -1));
-    perms.push_back(std::make_pair(-2, 0));
-    perms.push_back(std::make_pair(-1, 1));
-    perms.push_back(std::make_pair(1, 1));
-
     int match_count = 0;
 
     for (auto y : perms)
     {
         auto coord = std::make_pair(x.first + y.first, x.second + y.second);
-        tiles.emplace(coord, false);
+        // tiles.emplace(coord, false);
         if (tiles[coord] == true)
         {
             match_count++;
@@ -27,7 +19,14 @@ int check(const std::pair<int, int> &x, std::map<std::pair<int, int>, bool> &til
 
 void check_self(const std::pair<int, int> &x, std::map<std::pair<int, int>, bool> &tiles, std::map<std::pair<int, int>, bool> &new_tiles)
 {
-    auto matches = check(x, tiles, new_tiles);
+    std::vector<std::pair<int, int>> perms = {};
+    perms.push_back(std::make_pair(2, 0));
+    perms.push_back(std::make_pair(1, -1));
+    perms.push_back(std::make_pair(-1, -1));
+    perms.push_back(std::make_pair(-2, 0));
+    perms.push_back(std::make_pair(-1, 1));
+    perms.push_back(std::make_pair(1, 1));
+    auto matches = check(x, tiles, new_tiles, perms);
     if ((matches == 0) || (matches > 2))
     {
         new_tiles[x] = false;
@@ -47,12 +46,12 @@ void check_others(const std::pair<int, int> &x, std::map<std::pair<int, int>, bo
     for (auto y : perms)
     {
         auto coord = std::make_pair(x.first + y.first, x.second + y.second);
-        auto matches = check(coord, tiles, new_tiles);
+        auto matches = check(coord, tiles, new_tiles, perms);
         if (matches == 2)
         {
-            new_tiles.emplace(coord, false);
             if (!new_tiles[coord])
             {
+                new_tiles.emplace(coord, false);
                 new_tiles[coord] = !new_tiles[coord];
             }
         }
