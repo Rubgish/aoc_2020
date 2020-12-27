@@ -11,6 +11,7 @@
 #include <list>
 #include <deque>
 #include "cstring"
+#include <regex>
 
 class line
 {

@@ -12,8 +12,6 @@ int main(int argc, char *argv[])
     {
         auto command = x.substr(0, 1);
         auto value = std::stoi(x.substr(1));
-        std::cout << command << "  ";
-        std::cout << value << "\n";
 
         if (command == "N")
         {
