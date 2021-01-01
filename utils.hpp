@@ -12,6 +12,7 @@
 #include <deque>
 #include "cstring"
 #include <regex>
+#include <queue>
 
 class line
 {
