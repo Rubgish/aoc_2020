@@ -13,6 +13,7 @@
 #include "cstring"
 #include <regex>
 #include <queue>
+#include <math.h>
 
 class line
 {
