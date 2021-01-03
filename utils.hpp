@@ -14,6 +14,7 @@
 #include <regex>
 #include <queue>
 #include <math.h>
+#include <ctype.h>
 
 class line
 {
