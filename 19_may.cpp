@@ -1,8 +1,5 @@
 #include "utils.hpp"
 
-// What does the func look like?
-// https://en.wikipedia.org/wiki/CYK_algorithm
-
 class Pair
 {
 public:
@@ -17,6 +14,8 @@ public:
     int val2;
 };
 
+// What does the func look like? The pseudo-code at
+// https://en.wikipedia.org/wiki/CYK_algorithm
 bool cyk_grammar(std::string input, std::list<Pair> rules)
 {
     // Get length of input n
@@ -28,8 +27,6 @@ bool cyk_grammar(std::string input, std::list<Pair> rules)
     int b_val = 26;
     // int b_val = 14;
 
-    // Initialize array P[n, n, r] = false
-    // bool P[n][n][r + 1];
     bool P[n][n][150];
     for (size_t i = 0; i < n; i++)
     {
@@ -45,6 +42,7 @@ bool cyk_grammar(std::string input, std::list<Pair> rules)
     // Do the first replacement of the input with
     for (size_t i = 0; i < n; i++)
     {
+        // 43 is just 'a or b' but I don't handle that.
         int special = 43;
         // SPECIAL FOR TEST DATA
         // int special = 15;
@@ -78,44 +76,26 @@ bool cyk_grammar(std::string input, std::list<Pair> rules)
                         P[l + 1][s][a] = true;
                     }
                 }
+                // Manually handle replacements for 42 42 31 31 (up to 4 of each). Use the fact that
+                // both 42 and 31 consist of exactly 8 'a' or 'b', i.e. must be 7 rows up and 8 chars apart.
+                // Then just manually fill in the correct '11' symbol to have 42 42 31 31 -> 42 11 31 etc.
                 if (p == 7)
                 {
                     if (P[p][s][42] && P[p][s + 8][42] && P[p][s + 16][31] && P[p][s + 24][31])
                     {
-                        std::cout << "updated: " << p << "\n";
                         P[p + 24][s][11] = true;
                         P[p + 8][s + 8][11] = true;
                     }
                     if (P[p][s][42] && P[p][s + 8][42] && P[p][s + 16][42] && P[p][s + 24][31] && P[p][s + 32][31] && P[p][s + 40][31])
                     {
-                        std::cout << "Madness\n";
                         P[p + 40][s][11] = true;
                     }
                     if (P[p][s][42] && P[p][s + 8][42] && P[p][s + 16][42] && P[p][s + 24][42] && P[p][s + 32][31] && P[p][s + 40][31] && P[p][s + 48][31] && P[p][s + 56][31])
                     {
-                        std::cout << "Wicked Sick \n";
                         P[p + 56][s][11] = true;
                     }
                 }
             }
-            // Row 7 only interesting row, need to run this once p==7 is hit. 8: 42 8 I think should just be handled
-            // fine as is. It's the 42 11 31 I need to handle. I think. Maybe.
-
-            // // Part A: This takes me from 376 to 384 w/ & w/o part B but w/ part C
-            // int p = 7;
-            // // for (int q = 0; q < 50; q++)
-            // // {
-            // //     if (P[p][s][42] && P[p][s + q][42] && P[p][s + (2 * q)][31] && P[p][s + (3 * q)][31])
-            // //     {
-            // //         std::cout << "q: " << q << " p: " << p << "\n";
-            // //         P[p + (3 * q)][s][11] = true;
-            // //     }
-            // // }
-            // // Part B: From 306 -> 376 w/o part A
-            // if (P[p][s][42] && P[p + 8][s + 8][11] && P[p][s + 24][31])
-            // {
-            //     P[p + 24][s][11] = true;
-            // }
         }
     }
 
@@ -157,6 +137,8 @@ int main(int argc, char *argv[])
     {
         if (x.empty())
         {
+            // This code is set up so that 1: 1 matches just duplicate the rules for the match.
+            // This means they 'just work' when implementing cyk above.
             for (auto &&y : replacements)
             {
                 for (auto &&z : rules)
@@ -167,7 +149,7 @@ int main(int argc, char *argv[])
                     }
                 }
             }
-            // Part C: From 187 (orig) -> 306 w/o Part A or B.
+            // Specially add the new rule for part b
             rules.emplace_back(Pair(8, 42, 8));
             rules_read = true;
 
@@ -193,13 +175,10 @@ int main(int argc, char *argv[])
             {
                 replacements.emplace_back(std::make_pair(std::stoi(reg_out_c[1]), std::stoi(reg_out_c[2])));
                 replacements.emplace_back(std::make_pair(std::stoi(reg_out_c[1]), std::stoi(reg_out_c[3])));
-                // rules.emplace_front(Pair(std::stoi(reg_out_c[1]), std::stoi(reg_out_c[2]), std::nullopt));
-                // rules.emplace_front(Pair(std::stoi(reg_out_c[1]), std::stoi(reg_out_c[3]), std::nullopt));
             }
             else if (std::regex_search(x, reg_out_d, reg_exp_d))
             {
                 replacements.emplace_back(std::make_pair(std::stoi(reg_out_d[1]), std::stoi(reg_out_d[2])));
-                // rules.emplace_front(Pair(std::stoi(reg_out_d[1]), std::stoi(reg_out_d[2]), std::nullopt));
             }
             else
             {
@@ -213,31 +192,9 @@ int main(int argc, char *argv[])
             {
                 match++;
                 std::cout << "matched on :" << x << "\n";
-                // return 0;
             }
-            // return 0;
             std::cout << "matched: " << match << " of " << lc << "\n";
         }
-        // read rule number
-        // for each variant (ie. between each |)
-        //   store that as a possible rule
-        // Cheat a bit and for any rule that only has one section, duplicate that
-        //   ? std::map<std::int, std::pair<int,int>> maybe?
-        //   Hmm, maybe a multimap for the duplicate entries.
-        //   Yeah I think that'll be fine, so long as I can still get a size of it and iterate over the whole thing
-        // Nah, multimap is a huge pain.
-        // Instead force everything to have two sections, but still be a map
-        // std::map<int, std::pair<std::pair<int,int>, std::pair<int,int>>
-        // looks a mess but I think it's okay.
-
-        // Once we hit blank line, swap over to reading inputs.
-        // run the func
     }
     std::cout << "matches: " << match << "\n";
-
-    // for (int x = 0; x < data.size(); x++)
-    // {
-    //     std::cout << data[x].first.first << "," << data[x].first.second << "\n";
-    //     std::cout << data[x].second.first << "," << data[x].second.second << "\n";
-    // }
 }
