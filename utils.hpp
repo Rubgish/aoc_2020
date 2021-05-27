@@ -5,6 +5,7 @@
 #include <iterator>
 #include <utility>
 #include <string>
+#include <set>
 #include <map>
 #include <unordered_map>
 #include <sstream>
@@ -14,6 +15,7 @@
 #include <regex>
 #include <queue>
 #include <math.h>
+#include <optional>
 #include <ctype.h>
 
 class line
