@@ -45,8 +45,9 @@ bool cyk_grammar(std::string input, std::list<Pair> rules)
     // Do the first replacement of the input with
     for (size_t i = 0; i < n; i++)
     {
-        // SPECIAL FOR TEST DATA
         int special = 43;
+        // SPECIAL FOR TEST DATA
+        // int special = 15;
         P[0][i][special] = true;
         if (input[i] == 'a')
         {
@@ -77,7 +78,44 @@ bool cyk_grammar(std::string input, std::list<Pair> rules)
                         P[l + 1][s][a] = true;
                     }
                 }
+                if (p == 7)
+                {
+                    if (P[p][s][42] && P[p][s + 8][42] && P[p][s + 16][31] && P[p][s + 24][31])
+                    {
+                        std::cout << "updated: " << p << "\n";
+                        P[p + 24][s][11] = true;
+                        P[p + 8][s + 8][11] = true;
+                    }
+                    if (P[p][s][42] && P[p][s + 8][42] && P[p][s + 16][42] && P[p][s + 24][31] && P[p][s + 32][31] && P[p][s + 40][31])
+                    {
+                        std::cout << "Madness\n";
+                        P[p + 40][s][11] = true;
+                    }
+                    if (P[p][s][42] && P[p][s + 8][42] && P[p][s + 16][42] && P[p][s + 24][42] && P[p][s + 32][31] && P[p][s + 40][31] && P[p][s + 48][31] && P[p][s + 56][31])
+                    {
+                        std::cout << "Wicked Sick \n";
+                        P[p + 56][s][11] = true;
+                    }
+                }
             }
+            // Row 7 only interesting row, need to run this once p==7 is hit. 8: 42 8 I think should just be handled
+            // fine as is. It's the 42 11 31 I need to handle. I think. Maybe.
+
+            // // Part A: This takes me from 376 to 384 w/ & w/o part B but w/ part C
+            // int p = 7;
+            // // for (int q = 0; q < 50; q++)
+            // // {
+            // //     if (P[p][s][42] && P[p][s + q][42] && P[p][s + (2 * q)][31] && P[p][s + (3 * q)][31])
+            // //     {
+            // //         std::cout << "q: " << q << " p: " << p << "\n";
+            // //         P[p + (3 * q)][s][11] = true;
+            // //     }
+            // // }
+            // // Part B: From 306 -> 376 w/o part A
+            // if (P[p][s][42] && P[p + 8][s + 8][11] && P[p][s + 24][31])
+            // {
+            //     P[p + 24][s][11] = true;
+            // }
         }
     }
 
@@ -129,9 +167,14 @@ int main(int argc, char *argv[])
                     }
                 }
             }
-            // SPECIAL REPLACEMENTS
-            // rules.emplace_back(Pair(8, 42, 8));
+            // Part C: From 187 (orig) -> 306 w/o Part A or B.
+            rules.emplace_back(Pair(8, 42, 8));
             rules_read = true;
+
+            for (auto x : rules)
+            {
+                std::cout << x.key << ": " << x.val1 << " " << x.val2 << "\n";
+            }
             continue;
         }
 
@@ -173,8 +216,8 @@ int main(int argc, char *argv[])
                 // return 0;
             }
             // return 0;
+            std::cout << "matched: " << match << " of " << lc << "\n";
         }
-        std::cout << "matched: " << match << " of " << lc << "\n";
         // read rule number
         // for each variant (ie. between each |)
         //   store that as a possible rule
@@ -191,11 +234,6 @@ int main(int argc, char *argv[])
         // run the func
     }
     std::cout << "matches: " << match << "\n";
-
-    // for (auto x : rules)
-    // {
-    //     std::cout << x.key << ": " << x.val1 << " " << x.val2 << "\n";
-    // }
 
     // for (int x = 0; x < data.size(); x++)
     // {
